@@ -26,7 +26,7 @@ variables:
          scriptLocation: 'inlineScript'
          inlineScript: |
           #az group create --name $(resourceGroup) --location "$(location)"
-          #az appservice plan create --name $(appServicePlan) --resource-group $(resourceGroup) --sku $(sku) --is-linux
+          az appservice plan create --name $(appServicePlan) --resource-group $(resourceGroup) --sku $(sku) --is-linux
           az webapp create --resource-group $(resourceGroup) --plan $(appServicePlan) --name my-dev-webapp-$(Build.BuildId) --runtime "$(runtime)"
           
 -stage: DeployTest
