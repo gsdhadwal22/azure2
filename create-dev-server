@@ -1,0 +1,30 @@
+trigger:
+- main
+
+variables:
+ azureServiceConnection: 'AzureServiceConnection'
+ location: 'East US'
+ appServicePlan: 'GSD-SP1'
+ resourceGroup: 'GSD-RG1'
+ sku: 'F1'
+ runtime: 'NODE|18-lts' # Change this for other stacks: e.g., DOTNETCORE|6.0, PHP|8.1, etc.
+ 
+ stages:
+ - stage: DeployDev
+   displayName: Deploy to Dev
+   jobs:
+    - job: DeployDevSite
+      displayName: Deploy Dev Web App
+      pool:
+       vmImage: 'Ubuntu2404'
+      steps:
+      - task: AzureCLI@2
+        inputs:
+         azureSubscription: '$(azureServiceConnection)'
+         scriptType: 'bash'
+         scriptLocation: 'inlineScript'
+         inlineScript: |
+          #az group create --name $(resourceGroup) --location "$(location)"
+          az appservice plan create --name $(appServicePlan) --resource-group $(resourceGroup) --sku $(sku) --is-linux
+          az webapp create --resource-group $(resourceGroup) --plan $(appServicePlan) --name my-dev-webapp-$(Build.BuildId) --runtime "$(runtime)"
+          
